@@ -1,0 +1,1412 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#F5F8FC">
+<title>霍兰德职业兴趣测试 · 30题精简版</title>
+<style>
+/* ============ 基础与变量 ============ */
+:root{
+  --bg:#F5F8FC;
+  --surface:#FFFFFF;
+  --ink:#1F2937;
+  --muted:#6B7280;
+  --line:#E5EAF2;
+  --brand:#2563EB;
+  --brand-deep:#1E4FC4;
+  --brand-soft:#E8F0FE;
+  --r:#3B82F6;
+  --i:#8B5CF6;
+  --a:#F59E0B;
+  --s:#10B981;
+  --e:#F43F5E;
+  --c:#64748B;
+  --radius:18px;
+  --shadow:0 10px 30px rgba(31,41,55,.08);
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html,body{height:100%;}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans CJK SC",sans-serif;
+  background:var(--bg);
+  color:var(--ink);
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+#app{position:relative;max-width:680px;margin:0 auto;min-height:100vh;min-height:100dvh;padding:46px 20px 40px;display:flex;flex-direction:column;}
+.view{display:none;}
+.view.active{display:block;animation:viewIn .38s ease both;}
+@keyframes viewIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:none;}}
+button{font-family:inherit;border:none;cursor:pointer;touch-action:manipulation;}
+button:focus-visible{outline:3px solid rgba(37,99,235,.45);outline-offset:2px;}
+.card{background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow);padding:24px;margin-bottom:16px;}
+.sec-title{font-size:15px;font-weight:700;color:var(--ink);display:flex;align-items:center;gap:8px;margin-bottom:14px;}
+.sec-title .bar{width:4px;height:16px;border-radius:2px;background:var(--brand);}
+.muted{color:var(--muted);}
+@media (prefers-reduced-motion: reduce){
+  .view.active{animation:none;}
+}
+
+/* ============ 首页 ============ */
+.home-hero{text-align:center;padding:34px 20px 26px;}
+.home-badge{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:var(--brand-deep);background:var(--brand-soft);border-radius:999px;padding:6px 14px;margin-bottom:18px;}
+.home-title{font-size:30px;font-weight:800;letter-spacing:.5px;line-height:1.3;}
+.home-title .sub{display:block;font-size:15px;font-weight:600;color:var(--muted);margin-top:10px;letter-spacing:2px;}
+.home-hex{margin:22px auto 6px;max-width:320px;}
+.home-intro{font-size:14.5px;color:#374151;text-align:left;padding:0 6px;margin-top:6px;}
+.home-intro p{margin-bottom:10px;}
+.home-intro strong{color:var(--ink);}
+.rule-list{list-style:none;margin-top:4px;}
+.rule-list li{position:relative;padding:7px 0 7px 26px;font-size:14.5px;}
+.rule-list li::before{content:"";position:absolute;left:6px;top:14px;width:8px;height:8px;border-radius:2px;background:var(--brand);}
+.start-btn{
+  width:100%;margin-top:8px;padding:18px 0;border-radius:16px;background:var(--brand);
+  color:#fff;font-size:19px;font-weight:700;letter-spacing:4px;text-indent:4px;
+  box-shadow:0 10px 24px rgba(37,99,235,.32);transition:transform .12s ease,background .2s;
+}
+.start-btn:active{transform:scale(.97);background:var(--brand-deep);}
+.home-note{font-size:12px;color:var(--muted);text-align:center;margin-top:18px;}
+
+/* ============ 答题页 ============ */
+.quiz-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
+.quiz-progress-num{font-size:13px;font-weight:600;color:var(--muted);}
+.quiz-exit{font-size:13px;color:var(--muted);background:none;padding:6px 10px;border-radius:8px;}
+.quiz-exit:active{background:#E8ECF3;}
+.progress-track{height:8px;border-radius:4px;background:#E5EAF2;overflow:hidden;margin-bottom:26px;}
+.progress-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--brand),#60A5FA);transition:width .3s ease;}
+.q-card{padding:34px 26px;text-align:center;}
+.q-tag{font-size:12.5px;font-weight:600;color:var(--muted);letter-spacing:1px;margin-bottom:18px;}
+.q-text{font-size:21px;font-weight:600;line-height:1.55;min-height:110px;display:flex;align-items:center;justify-content:center;}
+.q-btns{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:26px;}
+.q-btn{
+  display:flex;flex-direction:column;align-items:center;gap:8px;
+  padding:18px 10px;border-radius:16px;background:#F6F8FB;border:2px solid #E5EAF2;
+  font-size:16.5px;font-weight:700;transition:transform .12s ease,border-color .2s,background .2s;
+}
+.q-btn svg{width:24px;height:24px;}
+.q-btn:active{transform:scale(.97);}
+.q-btn.opt-like:active,.q-btn.opt-like.chosen{border-color:#10B981;background:#ECFDF5;}
+.q-btn.opt-like svg{color:#10B981;}
+.q-btn.opt-some:active,.q-btn.opt-some.chosen{border-color:#F59E0B;background:#FFFBEB;}
+.q-btn.opt-some svg{color:#F59E0B;}
+.q-btn.opt-dislike:active,.q-btn.opt-dislike.chosen{border-color:#64748B;background:#F1F5F9;}
+.q-btn.opt-dislike svg{color:#64748B;}
+.name-input{
+  width:100%;padding:14px 16px;border:2px solid #E5EAF2;border-radius:12px;
+  font-size:16px;font-family:inherit;color:var(--ink);background:#FBFCFE;outline:none;
+  transition:border-color .2s;
+}
+.name-input:focus{border-color:var(--brand);background:#fff;}
+.name-input::placeholder{color:#9CA3AF;}
+.name-input.error{border-color:#EF4444;background:#FEF2F2;}
+.req-tag{font-size:11px;font-weight:700;color:#fff;background:#EF4444;border-radius:999px;padding:2px 8px;margin-left:6px;letter-spacing:1px;}
+.name-error{display:none;font-size:13px;color:#EF4444;margin-top:8px;}
+.q-nav{margin-top:20px;text-align:center;}
+.q-back{font-size:14px;color:var(--muted);background:none;padding:8px 18px;border-radius:10px;}
+.q-back:active{background:#E8ECF3;}
+
+/* ============ 报告页 ============ */
+.rep-hero{text-align:center;padding:30px 20px 24px;}
+.rep-label{font-size:13px;font-weight:600;color:var(--muted);letter-spacing:3px;margin-bottom:14px;}
+.rep-greet{font-size:19px;font-weight:800;color:var(--ink);margin-bottom:14px;}
+.rep-greet .name{color:var(--brand);}
+.rep-code{display:flex;justify-content:center;gap:14px;margin-bottom:12px;}
+.rep-code .code-letter{width:76px;height:76px;border-radius:20px;display:flex;align-items:center;justify-content:center;font-size:40px;font-weight:800;color:#fff;box-shadow:0 8px 20px rgba(31,41,55,.14);}
+.rep-phrase{font-size:15px;font-weight:600;color:#374151;max-width:480px;margin:0 auto;}
+.rep-meta{font-size:12px;color:var(--muted);margin-top:10px;}
+
+/* 雷达图 */
+.radar-wrap{display:flex;flex-direction:column;align-items:center;}
+#radarCanvas{width:100%;max-width:360px;height:300px;}
+
+/* 得分列表 */
+.score-list{display:flex;flex-direction:column;gap:10px;margin-top:8px;}
+.score-row{display:flex;align-items:center;gap:12px;}
+.score-dot{width:12px;height:12px;border-radius:4px;flex-shrink:0;}
+.score-name{width:64px;font-size:14px;font-weight:600;flex-shrink:0;}
+.score-name small{color:var(--muted);font-weight:500;}
+.score-bar-track{flex:1;height:10px;border-radius:5px;background:#EEF2F7;overflow:hidden;}
+.score-bar-fill{height:100%;border-radius:5px;transition:width .5s ease;}
+.score-val{width:52px;text-align:right;font-size:13px;font-weight:700;color:#374151;flex-shrink:0;}
+.score-val small{color:var(--muted);font-weight:500;}
+
+/* 类型解读 */
+.type-block{display:flex;gap:14px;padding:16px 0;border-top:1px solid var(--line);}
+.type-block:first-of-type{border-top:none;padding-top:4px;}
+.type-block .t-letter{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:20px;font-weight:800;flex-shrink:0;}
+.type-block .t-body{flex:1;}
+.type-block .t-head{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;}
+.type-block .t-name{font-size:16px;font-weight:700;}
+.type-block .t-rank{font-size:12px;font-weight:600;color:var(--muted);}
+.type-block .t-en{font-size:12px;color:var(--muted);}
+.type-block .t-key{margin-top:6px;font-size:13px;}
+.type-block .t-key b{font-weight:700;}
+.type-block .t-desc{margin-top:6px;font-size:14px;color:#374151;}
+
+/* 组合解读 */
+.combo-para{font-size:14.5px;color:#374151;text-align:left;}
+.combo-para p{margin-bottom:10px;}
+.hex-small{display:flex;justify-content:center;margin-top:10px;}
+
+/* 职业推荐 */
+.career-group{margin-bottom:16px;}
+.career-group:last-child{margin-bottom:0;}
+.cg-title{font-size:14px;font-weight:700;margin-bottom:10px;display:flex;align-items:center;gap:8px;}
+.cg-title .pill{font-size:11px;font-weight:700;color:#fff;padding:2px 9px;border-radius:999px;}
+.cg-tags{display:flex;flex-wrap:wrap;gap:8px;}
+.cg-tag{font-size:13.5px;background:#F4F6FA;border:1px solid var(--line);border-radius:10px;padding:7px 13px;color:#374151;}
+.career-tag{cursor:pointer;transition:border-color .15s,background .15s,transform .1s;font-family:inherit;}
+.career-tag:active{transform:scale(.96);}
+.career-tag:hover{border-color:#B7C4D6;background:#EDF1F7;}
+.career-hint{font-size:12.5px;color:var(--muted);margin:-8px 0 14px;}
+
+/* 职业详情页 */
+.back-btn{display:inline-flex;align-items:center;gap:6px;background:var(--brand-soft);color:var(--brand-deep);font-size:14px;font-weight:600;padding:9px 16px;border-radius:999px;margin-bottom:16px;}
+.back-btn:active{background:#DBE9FE;}
+.detail-head{display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
+.detail-type{font-size:12.5px;font-weight:700;color:#fff;padding:5px 14px;border-radius:999px;letter-spacing:1px;}
+.detail-title{font-size:24px;font-weight:800;line-height:1.3;}
+.detail-sub{font-size:13px;color:var(--muted);margin-top:12px;}
+.d-list{list-style:none;}
+.d-list li{position:relative;padding:7px 0 7px 22px;font-size:14.5px;color:#374151;}
+.d-list li::before{content:"";position:absolute;left:4px;top:14px;width:7px;height:7px;border-radius:2px;background:var(--brand);opacity:.7;}
+.subj-tag{font-size:13.5px;background:#EFF6FF;border:1px solid #BFD4F5;border-radius:10px;padding:7px 13px;color:#1D4ED8;}
+
+/* 建议 */
+.advice-item{display:flex;gap:12px;padding:12px 0;border-top:1px solid var(--line);}
+.advice-item:first-of-type{border-top:none;padding-top:2px;}
+.advice-item .a-num{width:26px;height:26px;border-radius:8px;background:var(--brand-soft);color:var(--brand-deep);font-size:13px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.advice-item .a-text{font-size:14px;color:#374151;}
+.advice-item .a-text b{color:var(--ink);}
+
+/* 报告操作按钮 */
+.rep-actions{display:flex;flex-direction:column;gap:12px;margin-top:4px;}
+.rep-btn{padding:15px 0;border-radius:14px;font-size:16px;font-weight:700;transition:transform .12s ease;}
+.rep-btn:active{transform:scale(.97);}
+.btn-print{background:var(--brand);color:#fff;box-shadow:0 8px 20px rgba(37,99,235,.28);}
+.btn-retry{background:#fff;color:var(--ink);border:2px solid var(--line);}
+.rep-foot{font-size:11.5px;color:var(--muted);text-align:center;margin-top:16px;}
+
+/* 左上角齿轮入口 */
+.gear-btn{
+  position:absolute;top:10px;left:0;width:40px;height:40px;border-radius:50%;
+  background:#fff;border:1px solid var(--line);box-shadow:0 4px 14px rgba(31,41,55,.08);
+  display:flex;align-items:center;justify-content:center;color:var(--muted);
+  transition:transform .12s ease,color .2s;
+}
+.gear-btn:active{transform:scale(.92);color:var(--brand);}
+.gear-btn svg{width:21px;height:21px;}
+
+/* 历史记录页 */
+.hist-count{font-size:12.5px;color:var(--muted);margin-bottom:12px;}
+.hist-list{display:flex;flex-direction:column;gap:10px;}
+.hist-item{
+  display:flex;align-items:center;gap:14px;width:100%;text-align:left;
+  background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px 16px;
+  box-shadow:0 6px 18px rgba(31,41,55,.05);transition:transform .1s ease,border-color .2s;
+}
+.hist-item:active{transform:scale(.98);border-color:#B7C4D6;}
+.hist-codes{display:flex;gap:4px;flex-shrink:0;}
+.hist-codes span{width:26px;height:26px;border-radius:7px;color:#fff;font-size:13px;font-weight:800;display:flex;align-items:center;justify-content:center;}
+.hist-main{flex:1;min-width:0;}
+.hist-name{font-size:15.5px;font-weight:700;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.hist-meta{font-size:12px;color:var(--muted);margin-top:3px;}
+.hist-arrow{font-size:12px;color:var(--brand);font-weight:600;flex-shrink:0;}
+.hist-empty{text-align:center;padding:44px 12px;color:var(--muted);font-size:14px;line-height:1.9;}
+.hist-note{font-size:12px;color:var(--muted);text-align:center;margin-top:16px;}
+.hist-warn{font-size:12.5px;color:#B45309;background:#FFFBEB;border:1px solid #FDE68A;border-radius:10px;padding:10px 12px;margin-bottom:12px;display:none;}
+
+/* 打印样式 */
+@media print{
+  body{background:#fff;}
+  #app{max-width:none;padding:0;min-height:0;}
+  .view{display:none !important;}
+  #report.view{display:block !important;}
+  .no-print{display:none !important;}
+  .card{box-shadow:none;border:1px solid #E5EAF2;page-break-inside:avoid;}
+  .rep-hero{padding-top:10px;}
+  #report{padding:0 8px;}
+}
+</style>
+</head>
+<body>
+<div id="app">
+
+  <button class="gear-btn no-print" id="gearBtn" aria-label="历史记录" title="历史记录">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="3.2"/>
+      <path d="M19.4 15a1.7 1.7 0 0 0 .34 1.87l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.7 1.7 0 0 0-1.87-.34 1.7 1.7 0 0 0-1.03 1.56V21a2 2 0 1 1-4 0v-.09a1.7 1.7 0 0 0-1.11-1.56 1.7 1.7 0 0 0-1.87.34l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.7 1.7 0 0 0 .34-1.87 1.7 1.7 0 0 0-1.56-1.03H3a2 2 0 1 1 0-4h.09a1.7 1.7 0 0 0 1.56-1.11 1.7 1.7 0 0 0-.34-1.87l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.7 1.7 0 0 0 1.87.34H9a1.7 1.7 0 0 0 1.03-1.56V3a2 2 0 1 1 4 0v.09a1.7 1.7 0 0 0 1.03 1.56 1.7 1.7 0 0 0 1.87-.34l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.7 1.7 0 0 0-.34 1.87V9a1.7 1.7 0 0 0 1.56 1.03H21a2 2 0 1 1 0 4h-.09a1.7 1.7 0 0 0-1.56 1.03z"/>
+    </svg>
+  </button>
+
+  <!-- ============ 视图：首页（测试说明） ============ -->
+  <section id="home" class="view" data-route="home">
+    <div class="home-hero">
+      <span class="home-badge">校园职业探索 · 兴趣代码 RIASEC</span>
+      <h1 class="home-title">霍兰德职业兴趣测试
+        <span class="sub">30 题精简版 · 约 3–5 分钟完成</span>
+      </h1>
+      <div class="home-hex" id="homeHex"></div>
+    </div>
+
+    <div class="card">
+      <div class="sec-title"><span class="bar"></span>这是什么测试？</div>
+      <div class="home-intro">
+        <p>霍兰德职业兴趣理论（Holland Codes / RIASEC）由美国心理学家<strong>约翰·霍兰德</strong>提出，是职业规划领域应用最广泛的测评工具之一。它将人的职业兴趣划分为六种基本类型：<strong>现实型(R)</strong>、<strong>研究型(I)</strong>、<strong>艺术型(A)</strong>、<strong>社会型(S)</strong>、<strong>企业型(E)</strong>、<strong>常规型(C)</strong>。</p>
+        <p>大多数人的兴趣是多种类型的组合，其中得分最高的三种构成你的<strong>「霍兰德代码」</strong>，据此可以匹配适合你的职业方向。</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="sec-title"><span class="bar"></span>测试说明</div>
+      <ul class="rule-list">
+        <li>共 <strong>30 题</strong>，每题描述一项活动或情境；</li>
+        <li>凭第一反应选择「喜欢 / 一般 / 不喜欢」三个选项，不要犹豫；</li>
+        <li>只问"我是否喜欢这件事"，不问"我能不能做到"；</li>
+        <li>完成即可获得<strong>即时分析报告</strong>：兴趣得分、霍兰德代码、职业推荐与行动建议。</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <div class="sec-title"><span class="bar"></span>填写姓名<span class="req-tag">必填</span></div>
+      <input type="text" class="name-input" id="nameInput" maxlength="12" placeholder="请输入你的姓名" autocomplete="off">
+      <p class="name-error" id="nameError" style="display:none">请先填写姓名再开始测试</p>
+    </div>
+
+    <button class="start-btn" id="startBtn">开始测试</button>
+    <p class="home-note">本测试依据霍兰德职业兴趣理论编制，为 30 题精简应用版，仅供职业自我探索与校园活动参考。</p>
+  </section>
+
+  <!-- ============ 视图：答题 ============ -->
+  <section id="quiz" class="view" data-route="quiz">
+    <div class="quiz-top">
+      <span class="quiz-progress-num" id="quizNum">第 1 / 30 题</span>
+      <button class="quiz-exit no-print" id="quizExit">退出测试</button>
+    </div>
+    <div class="progress-track">
+      <div class="progress-fill" id="progressFill" style="width:0%"></div>
+    </div>
+    <div class="card q-card">
+      <div class="q-tag" id="qTag">请根据第一反应作答</div>
+      <div class="q-text" id="qText"></div>
+      <div class="q-btns">
+        <button class="q-btn opt-like" id="btnLike" aria-label="喜欢">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+          喜欢
+        </button>
+        <button class="q-btn opt-some" id="btnSome" aria-label="一般">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 12h12"/></svg>
+          一般
+        </button>
+        <button class="q-btn opt-dislike" id="btnDislike" aria-label="不喜欢">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+          不喜欢
+        </button>
+      </div>
+      <div class="q-nav">
+        <button class="q-back no-print" id="btnBack">上一题</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 视图：分析报告 ============ -->
+  <section id="report" class="view" data-route="report">
+    <button class="back-btn no-print" id="repBack" style="display:none">返回历史记录</button>
+    <div class="rep-hero">
+      <div class="rep-label">测试报告 · 职业兴趣分析</div>
+      <div class="rep-greet" id="repGreet"></div>
+      <div class="rep-code" id="repCode"></div>
+      <p class="rep-phrase" id="repPhrase"></p>
+      <p class="rep-meta" id="repMeta"></p>
+    </div>
+
+    <div class="card">
+      <div class="sec-title"><span class="bar"></span>兴趣得分总览</div>
+      <div class="radar-wrap">
+        <canvas id="radarCanvas"></canvas>
+      </div>
+      <div class="score-list" id="scoreList"></div>
+    </div>
+
+    <div class="card">
+      <div class="sec-title"><span class="bar"></span>主导类型解读</div>
+      <div id="typeDetail"></div>
+    </div>
+
+    <div class="card">
+      <div class="sec-title"><span class="bar"></span>组合解读</div>
+      <div class="combo-para" id="comboPara"></div>
+      <div class="hex-small" id="hexSmall"></div>
+    </div>
+
+    <div class="card">
+      <div class="sec-title"><span class="bar"></span>职业推荐</div>
+      <p class="career-hint">点击任意职业，可查看工作内容、专业技能、学科相关与大学专业等详细介绍</p>
+      <div id="careerPlan"></div>
+    </div>
+
+    <div class="card">
+      <div class="sec-title"><span class="bar"></span>专业方向与行动建议</div>
+      <div id="adviceBox"></div>
+    </div>
+
+    <div class="rep-actions no-print">
+      <button class="rep-btn btn-print" id="btnPrint">打印 / 保存报告</button>
+      <button class="rep-btn btn-retry" id="btnRetry">重新测试</button>
+    </div>
+    <p class="rep-foot">结果依据你的作答实时计算，仅供职业自我探索参考；职业选择请结合学业、能力与实际情况综合判断。</p>
+  </section>
+
+  <!-- ============ 视图：职业详情 ============ -->
+  <section id="career" class="view" data-route="career">
+    <div class="card">
+      <button class="back-btn no-print" id="careerBack">返回报告</button>
+      <div class="detail-head">
+        <span class="detail-type" id="cType"></span>
+        <h2 class="detail-title" id="cTitle"></h2>
+      </div>
+      <p class="detail-sub" id="cSub"></p>
+    </div>
+    <div class="card">
+      <div class="sec-title"><span class="bar"></span>工作内容</div>
+      <ul class="d-list" id="cWork"></ul>
+    </div>
+    <div class="card">
+      <div class="sec-title"><span class="bar"></span>专业技能</div>
+      <div class="cg-tags" id="cSkills"></div>
+    </div>
+    <div class="card">
+      <div class="sec-title"><span class="bar"></span>专业品质 / 特质</div>
+      <ul class="d-list" id="cTraits"></ul>
+    </div>
+    <div class="card">
+      <div class="sec-title"><span class="bar"></span>学科相关</div>
+      <div class="cg-tags" id="cSubjects"></div>
+    </div>
+    <div class="card">
+      <div class="sec-title"><span class="bar"></span>相关大学专业</div>
+      <div class="cg-tags" id="cMajors"></div>
+    </div>
+  </section>
+
+  <!-- ============ 视图：历史记录 ============ -->
+  <section id="history" class="view" data-route="history">
+    <div class="card">
+      <button class="back-btn no-print" id="histBack">返回首页</button>
+      <div class="sec-title"><span class="bar"></span>测试记录</div>
+      <p class="hist-warn" id="histWarn">当前浏览器无法保存记录（可能处于无痕 / 隐私模式），本次记录不会被保存。</p>
+      <p class="hist-count" id="histCount"></p>
+      <div class="hist-list" id="histList"></div>
+    </div>
+    <p class="hist-note">记录保存在本设备的浏览器中，清除浏览器数据或更换设备后将无法查看。</p>
+  </section>
+
+</div>
+
+<script>
+/* ============ 数据 ============ */
+var TYPES = {
+  R: { name:'现实型', en:'Realistic', color:'#3B82F6', keyword:'动手 · 务实 · 机械 · 户外',
+       anchor:'脚踏实地的实践者',
+       desc:'动手能力强，喜欢与具体事物、工具和设备打交道，做事踏实直接，注重实用与结果。适合在明确、具体的任务中发挥执行力。',
+       majors:'机械类、电气类、土木建筑类、交通运输类、农林类、体育类',
+       careers:['机械工程师','电气工程师','土木工程师','汽车维修技师','飞行员 / 机长','运动员 / 教练','厨师','园艺师 / 农林技术员'],
+       tip:'多参加动手实践类活动（科技制作、社团工坊、劳动课），把动手能力变成看得见的作品和经历。' },
+  I: { name:'研究型', en:'Investigative', color:'#8B5CF6', keyword:'理性 · 钻研 · 分析 · 探索',
+       anchor:'追根究底的思考者',
+       desc:'善于观察与思考，喜欢独立探究问题、分析数据和探索规律，重视逻辑、知识与证据。适合在需要深度思考的领域深耕。',
+       majors:'理学类（数学 / 物理 / 化学 / 生物）、医学类、计算机类、电子信息类、统计类',
+       careers:['科研人员 / 研究员','医生 / 医学研究者','软件工程师 / 程序员','数据分析师','生物 / 化学研究员','大学教师（科研方向）','统计师','兽医'],
+       tip:'保持钻研的习惯，参加学科竞赛、科研兴趣小组或课题项目，把好奇心转化为看得见的研究能力。' },
+  A: { name:'艺术型', en:'Artistic', color:'#F59E0B', keyword:'创意 · 表达 · 审美 · 想象',
+       anchor:'天马行空的创造者',
+       desc:'想象力丰富，乐于用艺术形式表达自我，追求美感与独特性，喜欢尝试与众不同的新事物。适合在创作与表达的空间里施展才华。',
+       majors:'设计学类、美术学类、音乐舞蹈类、戏剧影视类、新闻传播类（内容创作方向）',
+       careers:['平面 / UI 设计师','插画师','作家 / 编辑','音乐人 / 歌手','摄影师','导演 / 编导','广告创意人','室内设计师'],
+       tip:'坚持创作并主动展示作品（画展、投稿、演出、自媒体），让作品本身成为你的名片。' },
+  S: { name:'社会型', en:'Social', color:'#10B981', keyword:'助人 · 沟通 · 合作 · 关怀',
+       anchor:'温暖可靠的助人者',
+       desc:'热心友善，擅长倾听与沟通，乐于帮助、教导和陪伴他人，重视人际关系与利他价值。适合在与人打交道的岗位发挥温度。',
+       majors:'教育学类、心理学类、社会学类、医学类（护理 / 康复）、公共管理类',
+       careers:['教师','心理咨询师','社会工作者','护士 / 康复治疗师','人力资源专员','幼师 / 早教老师','导游','公务员（民生服务类）'],
+       tip:'多参与志愿服务、社团组织与同伴辅导，锻炼沟通共情能力，积累"帮到别人"的成就感。' },
+  E: { name:'企业型', en:'Enterprising', color:'#F43F5E', keyword:'领导 · 说服 · 竞争 · 组织',
+       anchor:'敢想敢为的引领者',
+       desc:'目标感强，善于组织资源、说服他人并承担领导责任，享受竞争与挑战，追求成就与影响力。适合在需要推动与决策的岗位发光。',
+       majors:'工商管理类、市场营销、法学类、经济学类（应用方向）、公共管理类（管理方向）',
+       careers:['销售总监 / 市场营销','创业者 / 企业家','产品经理','律师','公关经理','主播 / 经纪人','金融销售','项目经理'],
+       tip:'主动承担组织者角色（班委、社团负责人、项目组长），在一次次统筹协调中积累领导经验。' },
+  C: { name:'常规型', en:'Conventional', color:'#64748B', keyword:'细致 · 条理 · 规则 · 可靠',
+       anchor:'严谨细致的执行者',
+       desc:'认真严谨，喜欢按规则和流程有条理地工作，重视秩序、细节与准确性，是值得信赖的执行者。适合在规范清晰的体系中稳步成长。',
+       majors:'会计学类、财务管理、审计学、行政管理、图书情报与档案管理、金融学类（运营方向）',
+       careers:['会计','审计师','出纳','行政专员','档案管理员','银行柜员','报关员','秘书 / 助理'],
+       tip:'用清单、计划与复盘管理学习和生活，把严谨细致练成自己的核心竞争力。' }
+};
+
+/* 职业详细介绍库（与 TYPES.careers 名称一一对应） */
+var CAREERS_DETAIL = {
+  R: [
+    { name:'机械工程师',
+      work:['负责机械设备与零部件的设计、制图和制造工艺规划','参与设备的安装调试、运行维护与故障分析','编写技术文档，与电气、工艺等团队协作推进项目'],
+      skills:['机械制图与 CAD/CAM 建模','材料与力学分析','工艺设计与设备调试能力'],
+      traits:['动手能力强，注重细节','空间想象力与逻辑思维','耐心踏实，善于解决实际问题'],
+      subjects:['数学','物理','化学'],
+      majors:['机械设计制造及其自动化','机械工程','车辆工程'] },
+    { name:'电气工程师',
+      work:['设计电气系统与电路，绘制电气图纸','负责配电、自动化控制系统的安装与调试','现场检修设备，保障用电与控制系统安全运行'],
+      skills:['电路原理与电气制图','PLC 与自动化控制技术','电气安全与规范知识'],
+      traits:['逻辑清晰，细心严谨','安全意识强，责任感强'],
+      subjects:['数学','物理'],
+      majors:['电气工程及其自动化','自动化','电子信息工程'] },
+    { name:'土木工程师',
+      work:['参与建筑、道路、桥梁等工程的方案设计与结构计算','负责施工现场管理、质量监督与安全把控','编制工程预算、进度计划并协调各方推进'],
+      skills:['工程制图与结构计算','施工组织与管理','测量与建筑材料知识'],
+      traits:['统筹协调能力强','吃苦耐劳，责任心强'],
+      subjects:['数学','物理','地理'],
+      majors:['土木工程','道路桥梁与渡河工程','工程管理'] },
+    { name:'汽车维修技师',
+      work:['诊断汽车各类故障并制定维修方案','完成发动机、底盘、电气系统的拆装与维修保养','与车主沟通维修建议，交付检修成果'],
+      skills:['汽车结构与电路知识','故障诊断与检测工具使用','拆装调试与养护技术'],
+      traits:['动手能力强，细心耐心','服务意识好，善于沟通'],
+      subjects:['物理','化学','数学'],
+      majors:['汽车检测与维修技术','汽车服务工程','新能源汽车技术'] },
+    { name:'飞行员 / 机长',
+      work:['驾驶飞机执行客运、货运或通用航空任务','执行飞行前检查、航线规划与油量计算','在飞行中监控仪表并处置突发情况'],
+      skills:['飞行操作与仪表驾驶','气象与导航知识','应急处置与机组协同'],
+      traits:['心理素质过硬，反应敏捷','高度责任感，纪律性强'],
+      subjects:['数学','物理','地理'],
+      majors:['飞行技术','交通运输（民航方向）'] },
+    { name:'运动员 / 教练',
+      work:['制定并执行日常训练计划，管理体能状态','参加比赛，分析对手并调整战术','担任教练时指导学员技术动作与心理状态'],
+      skills:['专项运动技能','体能训练与运动营养方法','运动损伤防护知识'],
+      traits:['自律坚韧，抗压能力强','善于激励和带动他人'],
+      subjects:['体育','生物','物理'],
+      majors:['体育教育','运动训练','运动人体科学'] },
+    { name:'厨师',
+      work:['负责食材挑选、加工与储存管理','烹制菜品并把控口味与出品质量','管理厨房团队、控制成本并研发新菜品'],
+      skills:['烹饪技法与刀工火候','食材营养与食品安全知识','菜品创新与成本管理'],
+      traits:['细心讲究，追求品质','抗压耐热，热爱生活'],
+      subjects:['化学','生物'],
+      majors:['烹饪与营养教育','烹饪工艺与营养','食品科学与工程'] },
+    { name:'园艺师 / 农林技术员',
+      work:['负责植物种植养护、园林绿化设计与施工','开展农作物栽培管理、病虫害防治','推广农业新技术，指导农户生产'],
+      skills:['植物学与栽培技术','园林规划与设计','病虫害防治与土壤管理'],
+      traits:['热爱自然，吃苦耐劳','观察细致，耐心专注'],
+      subjects:['生物','化学','地理'],
+      majors:['园艺','园林','农学','林学'] }
+  ],
+  I: [
+    { name:'科研人员 / 研究员',
+      work:['提出研究问题，设计并实施实验方案','收集、分析实验数据并验证假设','撰写学术论文与研究报告，参与学术交流'],
+      skills:['实验设计与数据分析','文献检索与科学阅读','学术论文写作'],
+      traits:['好奇心强，逻辑严谨','耐得住寂寞，专注深入'],
+      subjects:['数学','物理','化学','生物'],
+      majors:['数学与应用数学','物理学','化学','生物科学'] },
+    { name:'医生 / 医学研究者',
+      work:['接诊问诊，进行体格检查与疾病诊断','制定治疗方案，实施手术、用药等诊疗操作','开展医学研究，总结病例与临床经验'],
+      skills:['医学基础与临床知识','诊断与临床操作技术','医患沟通与人文关怀'],
+      traits:['严谨冷静，抗压能力强','同理心强，责任感重'],
+      subjects:['生物','化学','物理','数学'],
+      majors:['临床医学','基础医学','口腔医学','中医学'] },
+    { name:'软件工程师 / 程序员',
+      work:['设计软件架构，编写并调试代码','开发功能模块并参与测试与版本迭代','维护线上系统，解决运行问题'],
+      skills:['编程语言与算法','数据结构与系统设计','调试排错与代码质量意识'],
+      traits:['逻辑思维强，专注钻研','乐于学习新技术，抗压'],
+      subjects:['数学','物理','英语'],
+      majors:['计算机科学与技术','软件工程','人工智能'] },
+    { name:'数据分析师',
+      work:['收集与清洗业务数据，建立指标体系','搭建分析模型，洞察趋势与问题','输出可视化分析报告，支撑业务决策'],
+      skills:['统计学与数据可视化','SQL / Python 等分析工具','业务理解与数据讲故事能力'],
+      traits:['数字敏感，细致客观','逻辑清晰，结果导向'],
+      subjects:['数学','英语','物理'],
+      majors:['统计学','数据科学与大数据技术','数学与应用数学','应用统计学'] },
+    { name:'生物 / 化学研究员',
+      work:['设计并开展生化实验，操作精密仪器','配制试剂、分析样本并记录数据','跟踪文献，撰写实验报告与研究论文'],
+      skills:['实验操作与仪器使用','试剂配制与实验室安全规范','数据分析与报告撰写'],
+      traits:['严谨细心，动手能力强','耐心专注，敬畏数据'],
+      subjects:['生物','化学','数学'],
+      majors:['生物科学','生物技术','化学','应用化学'] },
+    { name:'大学教师（科研方向）',
+      work:['承担本科生或研究生课程教学','指导研究生开展课题研究','主持科研项目，发表学术论文'],
+      skills:['学术研究与论文写作','教学设计与会话式授课','学术交流与项目申报'],
+      traits:['热爱学问，表达清晰','严谨求实，乐于传道授业'],
+      subjects:['数学','英语','物理（依任教学科）'],
+      majors:['所教学科基础专业（如数学与应用数学、物理学等）','教育学（学科教学方向）'] },
+    { name:'统计师',
+      work:['设计调查方案与试验设计','收集整理统计数据，构建推断模型','输出统计结论，支持政策与商业决策'],
+      skills:['统计学理论与方法','统计软件（SAS / R / Python）','数据采集与抽样设计'],
+      traits:['逻辑严密，耐心细致','客观中立，实事求是'],
+      subjects:['数学','英语'],
+      majors:['统计学','应用统计学','经济统计学','数学与应用数学'] },
+    { name:'兽医',
+      work:['诊断治疗动物疾病，实施手术与用药','开展疫苗接种与防疫检疫工作','管理宠物、养殖场的健康与营养'],
+      skills:['动物解剖与生理知识','诊断与外科操作技术','防疫检疫规范'],
+      traits:['爱护动物，胆大心细','动手能力强，责任心重'],
+      subjects:['生物','化学','数学'],
+      majors:['动物医学','动物药学','兽医公共卫生'] }
+  ],
+  A: [
+    { name:'平面 / UI 设计师',
+      work:['设计品牌视觉、海报、包装等宣传物料','设计网页与 App 的界面与交互','与需求方沟通，迭代设计方案'],
+      skills:['设计软件（PS / AI / Figma）','排版配色与视觉规范','用户体验与信息架构思维'],
+      traits:['审美敏锐，创意丰富','沟通耐心，注重细节'],
+      subjects:['美术','信息技术','语文'],
+      majors:['视觉传达设计','数字媒体艺术','产品设计','设计学'] },
+    { name:'插画师',
+      work:['根据文案创作插画、绘本、封面与角色设定','把控画面风格，与客户沟通修改','持续创作个人作品，运营展示平台'],
+      skills:['手绘与板绘技法','色彩搭配与构图','商业项目沟通与交付'],
+      traits:['想象力丰富，观察细致','自律坚持，愿意打磨'],
+      subjects:['美术','语文'],
+      majors:['绘画','插画','视觉传达设计','动画'] },
+    { name:'作家 / 编辑',
+      work:['策划选题，创作小说、专栏、文案等内容','审校稿件，把关文字质量与风格','跟进出版或平台发布流程'],
+      skills:['文字表达与叙事能力','素材搜集与调研','编辑规范与审美判断'],
+      traits:['热爱阅读与写作，观察力强','耐心细致，坐得住冷板凳'],
+      subjects:['语文','历史','政治'],
+      majors:['汉语言文学','新闻学','编辑出版学','中国语言文学类'] },
+    { name:'音乐人 / 歌手',
+      work:['词曲创作、编曲与录音制作','排练与舞台演出，演绎作品','发行作品，运营音乐账号与演出机会'],
+      skills:['乐器演奏与乐理','演唱技巧与编曲制作','音乐制作软件操作'],
+      traits:['热爱音乐，情感表达丰富','自律勤奋，追求舞台表现力'],
+      subjects:['音乐','语文'],
+      majors:['音乐学','音乐表演','作曲与作曲技术理论','录音艺术'] },
+    { name:'摄影师',
+      work:['拍摄人像、风光、商业与活动题材','后期修图、调色与选片','与客户沟通拍摄方案并交付成片'],
+      skills:['相机操作与布光','构图与色彩语言','后期软件（PS / LR）'],
+      traits:['审美敏锐，善于观察','耐心沟通，体力好'],
+      subjects:['美术','物理'],
+      majors:['摄影','影视摄影与制作','数字媒体艺术','视觉传达设计'] },
+    { name:'导演 / 编导',
+      work:['负责影视、短视频、舞台作品的创意策划','现场执导、调度演员与团队','把控后期剪辑与成片质量'],
+      skills:['镜头语言与叙事结构','剧本理解与分镜设计','团队组织与现场调度'],
+      traits:['创意丰富，审美在线','组织能力强，果断抗压'],
+      subjects:['语文','美术','音乐'],
+      majors:['戏剧影视导演','广播电视编导','影视摄影与制作','播音与主持艺术（偏幕后）'] },
+    { name:'广告创意人',
+      work:['洞察品牌与消费者，构思广告创意','产出文案、视觉、视频等创意方案','向客户提案并跟进执行落地'],
+      skills:['创意构思与文案写作','市场与消费者洞察','提案表达与沟通'],
+      traits:['脑洞大，点子多','抗压能力强，说服力好'],
+      subjects:['语文','美术','政治'],
+      majors:['广告学','市场营销','视觉传达设计','传播学'] },
+    { name:'室内设计师',
+      work:['实地测量空间，构思并绘制设计方案','制作效果图与施工图','跟进装修施工与软装搭配落地'],
+      skills:['设计软件（CAD / 3D / SketchUp）','空间与色彩搭配','材料与施工工艺知识'],
+      traits:['审美在线，沟通耐心','细致负责，统筹能力强'],
+      subjects:['美术','物理','数学'],
+      majors:['环境设计','建筑学','产品设计','室内设计（专科）'] }
+  ],
+  S: [
+    { name:'教师',
+      work:['备课、授课与作业批改','组织课堂活动与班级管理','因材施教，与家长沟通反馈'],
+      skills:['学科专业知识与教学法','课堂组织与语言表达','学生心理辅导与激励'],
+      traits:['耐心负责，热爱育人','表达清晰，感染力强'],
+      subjects:['语文','数学','政治','任教学科（依所教科目）'],
+      majors:['教育学类','汉语言文学（语文教师方向）','数学与应用数学（数学教师方向）','各学科师范专业'] },
+    { name:'心理咨询师',
+      work:['接待来访者，倾听并评估心理状况','运用咨询技术帮助其调整认知与情绪','开展心理测评、科普讲座与危机干预'],
+      skills:['咨询理论与技术（认知行为、人本等）','倾听与共情能力','心理测评工具使用'],
+      traits:['共情力强，情绪稳定','尊重隐私，保密守信'],
+      subjects:['生物','政治','语文'],
+      majors:['心理学','应用心理学','心理健康教育'] },
+    { name:'社会工作者',
+      work:['走访社区，评估困难群体需求','链接政府与公益资源，提供帮扶','组织社区活动，宣传政策法规'],
+      skills:['个案、小组与社区工作方法','政策解读与资源整合','沟通协调与文书写作'],
+      traits:['热心公益，耐心同理','责任担当，务实肯干'],
+      subjects:['政治','历史','语文'],
+      majors:['社会工作','社会学','公共事业管理'] },
+    { name:'护士 / 康复治疗师',
+      work:['执行医嘱，完成护理操作与用药管理','观察记录患者病情变化','开展康复训练与健康宣教'],
+      skills:['护理操作技术','药理与急救知识','医患沟通与健康指导'],
+      traits:['细心温柔，责任心强','抗压坚韧，动作麻利'],
+      subjects:['生物','化学'],
+      majors:['护理学','康复治疗学','助产学'] },
+    { name:'人力资源专员',
+      work:['发布职位并组织招聘面试','办理入离职、社保等人事手续','组织培训与绩效考核，处理员工关系'],
+      skills:['招聘渠道与面试技巧','劳动法规知识','沟通协调与数据分析'],
+      traits:['公正亲和，沟通力强','细致有条理，守密'],
+      subjects:['政治','语文','数学'],
+      majors:['人力资源管理','劳动与社会保障','工商管理'] },
+    { name:'幼师 / 早教老师',
+      work:['组织幼儿一日活动与游戏化教学','照料幼儿生活起居，保障安全','家园沟通，记录成长档案'],
+      skills:['幼儿心理与教育方法','弹唱跳画等基本功','活动组织与课堂管理'],
+      traits:['有爱心与耐心，活泼亲和','观察敏锐，责任心强'],
+      subjects:['美术','音乐','语文'],
+      majors:['学前教育','早期教育','幼儿发展与健康管理'] },
+    { name:'导游',
+      work:['讲解景点历史与文化背景','安排行程、食宿与交通衔接','处理旅途中的突发情况，保障游客体验'],
+      skills:['语言表达与讲解能力','地理历史知识储备','组织协调与应变能力'],
+      traits:['外向健谈，热情细心','体能好，抗压灵活'],
+      subjects:['历史','地理','语文','英语'],
+      majors:['旅游管理','旅游英语','导游（专科）'] },
+    { name:'公务员（民生服务类）',
+      work:['办理窗口与基层公共服务事项','执行政策并开展群众沟通工作','撰写公文与调研报告'],
+      skills:['政策理解与公文写作','政务服务流程与规范','沟通协调与应急处理'],
+      traits:['沉稳负责，服务意识强','严谨守规，耐心细致'],
+      subjects:['政治','语文','历史'],
+      majors:['行政管理','公共事业管理','汉语言文学','法学'] }
+  ],
+  E: [
+    { name:'销售总监 / 市场营销',
+      work:['制定销售策略与业绩目标','开拓客户、维护渠道关系','组建并激励销售团队，复盘业绩'],
+      skills:['谈判与客户关系管理','市场分析与策略制定','团队管理与目标拆解'],
+      traits:['目标感强，口才好','抗压果断，感染力强'],
+      subjects:['政治','数学','语文'],
+      majors:['市场营销','工商管理','国际经济与贸易','电子商务'] },
+    { name:'创业者 / 企业家',
+      work:['发现商机，设计商业模式','组建团队，融资并分配资源','持续经营，做关键风险决策'],
+      skills:['商业策划与财务基础','领导力与资源整合','风险判断与快速学习'],
+      traits:['敢想敢闯，抗压坚韧','学习能力强，乐于拥抱变化'],
+      subjects:['数学','政治','英语'],
+      majors:['工商管理','经济学','金融学','电子商务'] },
+    { name:'产品经理',
+      work:['调研用户需求与市场机会','规划产品功能与迭代节奏','协调研发、设计、运营推动产品上线'],
+      skills:['需求分析与文档撰写','数据分析与优先级判断','跨部门沟通与项目管理'],
+      traits:['逻辑与共情兼备','主动负责，表达清晰'],
+      subjects:['数学','语文','英语'],
+      majors:['计算机科学与技术','信息管理与信息系统','产品设计','市场营销'] },
+    { name:'律师',
+      work:['分析案件事实与法律关系','撰写起诉状、合同等法律文书','出庭辩护、代理与提供法律咨询'],
+      skills:['法律条文运用与检索','逻辑推理与辩论','法律文书写作'],
+      traits:['逻辑严密，口才出众','正义感强，严谨守正'],
+      subjects:['政治','历史','语文'],
+      majors:['法学','知识产权','政治学与行政学'] },
+    { name:'公关经理',
+      work:['维护企业与媒体、公众的关系','策划公关活动与品牌传播','危机公关与舆情应对'],
+      skills:['媒体资源与新闻写作','活动策划与执行','危机应变与沟通表达'],
+      traits:['情商高，应变快','表达得体，形象管理好'],
+      subjects:['语文','政治','英语'],
+      majors:['公共关系学','新闻传播学类','市场营销','汉语言文学'] },
+    { name:'主播 / 经纪人',
+      work:['策划并出镜直播、短视频内容','与粉丝互动，维护账号人设','洽谈商业合作，运营变现'],
+      skills:['镜头表达与语言感染力','内容策划与热点捕捉','商务谈判与粉丝运营'],
+      traits:['表现力强，状态稳定','抗压，对潮流敏感'],
+      subjects:['语文','美术','音乐'],
+      majors:['播音与主持艺术','网络与新媒体','表演','数字媒体艺术'] },
+    { name:'金融销售',
+      work:['向客户推荐理财、保险、证券等产品','分析客户需求，设计资产配置方案','维护客户关系，完成业绩目标'],
+      skills:['金融产品与市场知识','客户沟通与风险揭示','行情分析与合规意识'],
+      traits:['亲和力强，目标导向','抗压，诚信守规'],
+      subjects:['数学','政治','英语'],
+      majors:['金融学','投资学','保险学','经济与金融'] },
+    { name:'项目经理',
+      work:['制定项目计划、预算与里程碑','协调团队分工，推进项目执行','监控进度、质量与风险，按期交付'],
+      skills:['项目计划与进度管理','资源协调与风险管理','项目管理工具（甘特图等）'],
+      traits:['统筹能力强，条理清晰','善于沟通，抗压负责'],
+      subjects:['数学','英语','物理'],
+      majors:['工程管理','工商管理','信息管理与信息系统','项目管理（研究生方向）'] }
+  ],
+  C: [
+    { name:'会计',
+      work:['完成日常记账、核算与凭证管理','编制财务报表并进行财务分析','办理税务申报与成本资金管理'],
+      skills:['会计准则与会计核算','财务软件（用友 / 金蝶等）','税务与法规知识'],
+      traits:['严谨细致，数字敏感','诚实守信，责任心强'],
+      subjects:['数学','政治','语文'],
+      majors:['会计学','财务管理','审计学'] },
+    { name:'审计师',
+      work:['审查企业账目与内部控制','识别财务风险，出具审计意见','参与合规检查与专项审计项目'],
+      skills:['审计程序与方法','财务分析与内控评价','法规与准则运用'],
+      traits:['客观公正，逻辑缜密','细致敏锐，立场坚定'],
+      subjects:['数学','政治'],
+      majors:['审计学','会计学','财务管理'] },
+    { name:'出纳',
+      work:['办理现金收付与银行结算业务','登记现金与银行日记账','保管票据、印章，盘点库存现金'],
+      skills:['现金管理规范','银行结算业务流程','财务软件与票据处理'],
+      traits:['细心严谨，原则性强','责任心重，守口如瓶'],
+      subjects:['数学'],
+      majors:['会计学','财务管理','金融学'] },
+    { name:'行政专员',
+      work:['处理办公事务与会议组织','负责文件收发、传达与归档','管理后勤、办公用品与固定资产'],
+      skills:['办公软件与公文写作','会务组织与接待','沟通协调与多任务管理'],
+      traits:['细致有条理，亲和稳重','执行力强，服务意识好'],
+      subjects:['语文','政治'],
+      majors:['行政管理','汉语言文学','工商管理'] },
+    { name:'档案管理员',
+      work:['收集、分类与编目各类档案资料','推进档案数字化与检索利用','做好档案保管、保密与借阅管理'],
+      skills:['档案管理规范与标准','信息检索与数字化技术','分类整理与编目'],
+      traits:['耐心细致，条理清晰','保密意识强，坐得住'],
+      subjects:['历史','语文'],
+      majors:['档案学','图书馆学','信息管理与信息系统'] },
+    { name:'银行柜员',
+      work:['办理柜台存取款、转账、开户等业务','推荐基础金融产品与服务','每日现金盘点、凭证整理与交接'],
+      skills:['银行业务流程与系统操作','点钞与假币识别','客户服务与沟通'],
+      traits:['细心谨慎，服务热情','抗压，数字准确'],
+      subjects:['数学','政治'],
+      majors:['金融学','会计学','经济学','金融科技'] },
+    { name:'报关员',
+      work:['申报进出口货物报关单','配合海关查验，处理通关事务','计算关税，审核各类单证'],
+      skills:['报关单证与通关流程','海关法规与税则','国际贸易与物流知识'],
+      traits:['细致严谨，责任意识强','英文阅读能力好'],
+      subjects:['英语','地理','数学'],
+      majors:['国际经济与贸易','报关与国际货运','物流管理','海关管理'] },
+    { name:'秘书 / 助理',
+      work:['统筹日程安排与会议组织','起草公文、纪要并传达信息','安排领导行程、接待来访'],
+      skills:['公文写作与办公软件','时间管理与多任务协调','商务礼仪与保密素养'],
+      traits:['细心周到，保密可靠','应变灵活，执行力强'],
+      subjects:['语文','政治','英语'],
+      majors:['汉语言文学','行政管理','商务英语','文秘（专科）'] }
+  ]
+};
+
+var POOLS = {
+  R: [
+    '喜欢动手修理电器、家具或自行车等物品',
+    '喜欢使用工具（如扳手、电钻、螺丝刀）进行组装或制作',
+    '喜欢户外劳动，如种植花草、照顾小动物、打理园艺',
+    '喜欢操作或驾驶机械设备（如汽车、机床、无人机）',
+    '东西损坏时，倾向于自己动手排查原因并把它修好'
+  ],
+  I: [
+    '喜欢探究事物的原理，思考"为什么会这样"',
+    '喜欢做实验、观察现象，并记录分析结果',
+    '喜欢阅读科学、技术类书籍或科普节目',
+    '喜欢解数学题、逻辑谜题或烧脑的推理游戏',
+    '喜欢独自钻研一个问题，直到彻底弄明白为止'
+  ],
+  A: [
+    '喜欢绘画、书法、摄影、设计等创作活动',
+    '喜欢写作、创作故事，或用文字记录想法',
+    '喜欢唱歌、演奏乐器，或沉浸在音乐之中',
+    '喜欢看电影、逛展览，并品评其中的艺术表现',
+    '喜欢尝试与众不同、有创意的表达方式'
+  ],
+  S: [
+    '喜欢帮助别人解决困难或解答疑问',
+    '喜欢和不同的人聊天，倾听他们的想法',
+    '喜欢当"小老师"，把知识讲给别人听',
+    '喜欢参加社团活动，或组织同学一起聚会',
+    '喜欢做志愿者、公益活动，或照顾他人的事'
+  ],
+  E: [
+    '喜欢担任班干部或团队里的负责人',
+    '喜欢参加演讲、辩论，说服别人接受自己的观点',
+    '喜欢组织活动，统筹安排大家分工合作',
+    '喜欢卖东西、拉赞助，或跟别人谈合作',
+    '喜欢挑战有竞争性的任务，争取做到最好'
+  ],
+  C: [
+    '喜欢把物品分类整理，摆放得井井有条',
+    '喜欢制定计划、列清单，并按计划执行',
+    '喜欢记账、整理资料或统计数据',
+    '喜欢按照明确的规则和流程完成任务',
+    '喜欢核对数字、校对文字等细致的工作'
+  ]
+};
+
+/* 轮转排题：每轮六种类型各一题，保证全卷均衡、不连续同型 */
+var ROUNDS = [
+  ['R','I','A','S','E','C'],
+  ['I','S','R','C','A','E'],
+  ['A','R','E','I','C','S'],
+  ['C','S','I','E','R','A'],
+  ['E','A','C','S','I','R']
+];
+
+var QUESTIONS = [];
+ROUNDS.forEach(function(round, ri){
+  round.forEach(function(t){
+    QUESTIONS.push({ type: t, text: POOLS[t][ri] });
+  });
+});
+
+/* 六边形相邻与相对关系（霍兰德六边形模型） */
+var ADJ = { R:['I','C'], I:['R','A'], A:['I','S'], S:['A','E'], E:['S','C'], C:['E','R'] };
+function isOpposite(a, b){
+  return (a==='R'&&b==='S')||(a==='S'&&b==='R')||(a==='I'&&b==='E')||(a==='E'&&b==='I')||(a==='A'&&b==='C')||(a==='C'&&b==='A');
+}
+var TYPE_ORDER = ['R','I','A','S','E','C'];
+
+/* ============ 纯逻辑（可独立测试） ============ */
+/* 三级作答：喜欢=2 一般=1 不喜欢=0；每型5题，满分10 */
+var MAX_SCORE = 10;
+
+function computeReport(answers){
+  var scores = { R:0, I:0, A:0, S:0, E:0, C:0 };
+  for (var i = 0; i < QUESTIONS.length; i++){
+    var v = answers[i];
+    if (v > 0) scores[QUESTIONS[i].type] += v;
+  }
+  var rankedAll = TYPE_ORDER.slice().map(function(t){
+    return { type: t, score: scores[t], pct: Math.round(scores[t] / MAX_SCORE * 100) };
+  }).sort(function(x, y){
+    if (y.score !== x.score) return y.score - x.score;
+    return TYPE_ORDER.indexOf(x.type) - TYPE_ORDER.indexOf(y.type);
+  });
+  var top = rankedAll.slice(0, 3);
+  var code = top.map(function(r){ return r.type; }).join('');
+  return {
+    scores: scores,
+    rankedAll: rankedAll,
+    top: top,
+    code: code,
+    primary: top[0].type,
+    secondary: top[1].type,
+    tertiary: top[2].type
+  };
+}
+
+function comboText(rep){
+  var a = rep.top[0].type, b = rep.top[1].type, c = rep.top[2].type;
+  var A = TYPES[a], B = TYPES[b], C = TYPES[c];
+  var s = [];
+  s.push('你的兴趣结构以「' + A.name + '(' + a + ')」为主导，「' + B.name + '(' + b + ')」为支撑，「' + C.name + '(' + c + ')」为补充，形成' + A.keyword.split('·')[0].trim() + '与' + B.keyword.split('·')[0].trim() + '并重的鲜明画像。');
+  if (ADJ[a].indexOf(b) > -1) {
+    s.push('从霍兰德六边形看，' + A.name + '与' + B.name + '相邻，两种兴趣相互促进，组合协调，容易在相关领域持续投入并获得成就感。');
+  } else if (isOpposite(a, b)) {
+    s.push('值得注意的是，' + A.name + '与' + B.name + '在六边形中相对，代表你兼具两种互补的特质——一面' + A.keyword.split('·')[1].trim() + '，一面' + B.keyword.split('·')[1].trim() + '。这样的组合潜力很大，但需要你主动寻找两种特质结合的场景，避免顾此失彼。');
+  } else {
+    s.push('从霍兰德六边形看，' + A.name + '与' + B.name + '间隔一位，组合较为独特，说明你的兴趣面较宽，跨界融合正是你的优势。');
+  }
+  s.push('而' + C.name + '(' + c + ')作为辅助兴趣，为你的发展方向增添' + C.keyword.split('·')[0].trim() + '的底色——让你在' + A.name + '与' + B.name + '之外，还能多一种看待世界的方式。');
+  return s.join('\n');
+}
+
+function careerPlan(rep){
+  var groups = [];
+  groups.push({ key:'主导方向', label:'以 ' + TYPES[rep.primary].name + ' 为核心', color: TYPES[rep.primary].color, type: rep.primary, careers: TYPES[rep.primary].careers });
+  groups.push({ key:'辅助方向', label:'以 ' + TYPES[rep.secondary].name + ' 为支撑', color: TYPES[rep.secondary].color, type: rep.secondary, careers: TYPES[rep.secondary].careers.slice(0, 4) });
+  groups.push({ key:'拓展方向', label:'以 ' + TYPES[rep.tertiary].name + ' 为补充', color: TYPES[rep.tertiary].color, type: rep.tertiary, careers: TYPES[rep.tertiary].careers.slice(0, 3) });
+  return groups;
+}
+
+/* ============ DOM 渲染 ============ */
+var state = {
+  answers: new Array(QUESTIONS.length).fill(null),
+  idx: 0,
+  finished: false,
+  report: null,
+  name: '',
+  reportTs: 0,
+  fromHistory: false
+};
+
+function hexPoints(cx, cy, r, rot){
+  var pts = [], k;
+  for (var i = 0; i < 6; i++){
+    k = -Math.PI / 2 + i * Math.PI / 3 + (rot || 0);
+    pts.push([ cx + r * Math.cos(k), cy + r * Math.sin(k) ]);
+  }
+  return pts;
+}
+
+/* 六边形图标：order 为 [R,I,A,S,E,C] 环绕，high 为高亮字母集合 */
+function hexSVG(size, highSet){
+  var cx = size / 2, cy = size / 2, R = size * 0.30;
+  var pts = hexPoints(cx, cy, R);
+  var labels = TYPE_ORDER;
+  var faces = '', marks = '', i, j;
+  for (i = 0; i < 6; i++){
+    j = (i + 1) % 6;
+    var t = labels[i];
+    var lit = highSet ? (highSet.indexOf(t) > -1) : true;
+    faces += '<polygon points="' + cx + ',' + cy + ' ' + pts[i][0] + ',' + pts[i][1] + ' ' + pts[j][0] + ',' + pts[j][1] + '" fill="' + TYPES[t].color + '" opacity="' + (lit ? 0.92 : 0.18) + '"/>';
+  }
+  for (i = 0; i < 6; i++){
+    var t2 = labels[i];
+    var lit2 = highSet ? (highSet.indexOf(t2) > -1) : true;
+    var ang = -Math.PI / 2 + i * Math.PI / 3;
+    var lx = cx + (R * 0.55) * Math.cos(ang);
+    var ly = cy + (R * 0.55) * Math.sin(ang);
+    marks += '<text x="' + lx + '" y="' + ly + '" text-anchor="middle" dominant-baseline="central" font-size="' + (size * 0.13) + '" font-weight="800" fill="#fff">' + t2 + '</text>';
+    var nx = cx + (R + size * 0.09) * Math.cos(ang);
+    var ny = cy + (R + size * 0.09) * Math.sin(ang);
+    marks += '<text x="' + nx + '" y="' + ny + '" text-anchor="middle" dominant-baseline="central" font-size="' + (size * 0.052) + '" font-weight="600" fill="' + (lit2 ? TYPES[t2].color : '#9CA3AF') + '">' + TYPES[t2].name + '</text>';
+  }
+  return '<svg viewBox="0 0 ' + size + ' ' + size + '" width="100%" style="max-width:' + size + 'px">' + faces + marks + '</svg>';
+}
+
+function renderHome(){
+  document.getElementById('homeHex').innerHTML = hexSVG(320, null);
+}
+
+/* ---- 答题 ---- */
+function renderQuiz(){
+  var n = state.idx + 1;
+  document.getElementById('quizNum').textContent = '第 ' + n + ' / ' + QUESTIONS.length + ' 题';
+  document.getElementById('progressFill').style.width = (state.idx / QUESTIONS.length * 100) + '%';
+  document.getElementById('qText').textContent = QUESTIONS[state.idx].text;
+  var a = state.answers[state.idx];
+  document.getElementById('btnLike').classList.toggle('chosen', a === 2);
+  document.getElementById('btnSome').classList.toggle('chosen', a === 1);
+  document.getElementById('btnDislike').classList.toggle('chosen', a === 0);
+  document.getElementById('btnBack').style.visibility = state.idx === 0 ? 'hidden' : 'visible';
+}
+
+function answer(val){
+  state.answers[state.idx] = val;
+  if (state.idx < QUESTIONS.length - 1){
+    state.idx++;
+    renderQuiz();
+  } else {
+    finish();
+  }
+}
+
+function finish(){
+  state.report = computeReport(state.answers);
+  state.finished = true;
+  state.fromHistory = false;
+  state.reportTs = Date.now();
+  saveRecord(state.name, state.answers, state.reportTs);
+  location.hash = '#report';
+}
+
+/* ---- 本机历史记录（localStorage） ---- */
+var HISTORY_KEY = 'holland_records_v1';
+var HISTORY_LIMIT = 500;
+var storageOK = true;
+
+function loadHistory(){
+  try{
+    var raw = localStorage.getItem(HISTORY_KEY);
+    if (!raw) return [];
+    var list = JSON.parse(raw);
+    return (list && typeof list.length === 'number') ? list : [];
+  }catch(e){
+    storageOK = false;
+    return [];
+  }
+}
+
+function saveRecord(name, answers, ts){
+  var list = loadHistory();
+  list.unshift({
+    id: 'r' + ts + '_' + Math.random().toString(36).slice(2, 7),
+    name: name || '',
+    ts: ts,
+    answers: answers.slice()
+  });
+  if (list.length > HISTORY_LIMIT) list = list.slice(0, HISTORY_LIMIT);
+  try{
+    localStorage.setItem(HISTORY_KEY, JSON.stringify(list));
+    storageOK = true;
+  }catch(e){
+    storageOK = false;
+  }
+}
+
+function fmtTime(ts){
+  var d = new Date(ts);
+  function p(n){ return n < 10 ? '0' + n : '' + n; }
+  return d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate()) + ' ' + p(d.getHours()) + ':' + p(d.getMinutes());
+}
+
+function renderHistory(){
+  var box = document.getElementById('histList');
+  var cnt = document.getElementById('histCount');
+  var warn = document.getElementById('histWarn');
+  var list = loadHistory();
+  box.innerHTML = '';
+  warn.style.display = storageOK ? 'none' : 'block';
+
+  if (!list.length){
+    cnt.textContent = '';
+    var empty = document.createElement('div');
+    empty.className = 'hist-empty';
+    empty.textContent = '还没有测试记录';
+    var tip = document.createElement('div');
+    tip.textContent = '完成一次测试后，报告会自动记录在这里';
+    empty.appendChild(tip);
+    box.appendChild(empty);
+    return;
+  }
+
+  cnt.textContent = '共 ' + list.length + ' 条记录（本设备保存）';
+
+  list.forEach(function(rec){
+    var rep = computeReport(rec.answers);
+    var btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'hist-item';
+
+    var codes = document.createElement('div');
+    codes.className = 'hist-codes';
+    rep.code.split('').forEach(function(l){
+      var s = document.createElement('span');
+      s.style.background = TYPES[l].color;
+      s.textContent = l;
+      codes.appendChild(s);
+    });
+
+    var main = document.createElement('div');
+    main.className = 'hist-main';
+    var nm = document.createElement('div');
+    nm.className = 'hist-name';
+    nm.textContent = rec.name || '（未填写姓名）';
+    var meta = document.createElement('div');
+    meta.className = 'hist-meta';
+    meta.textContent = fmtTime(rec.ts) + ' · ' + TYPES[rep.primary].name + '主导';
+    main.appendChild(nm);
+    main.appendChild(meta);
+
+    var arrow = document.createElement('span');
+    arrow.className = 'hist-arrow';
+    arrow.textContent = '查看报告';
+
+    btn.appendChild(codes);
+    btn.appendChild(main);
+    btn.appendChild(arrow);
+    btn.addEventListener('click', function(){ openRecord(rec.id); });
+    box.appendChild(btn);
+  });
+}
+
+function openRecord(id){
+  var list = loadHistory();
+  for (var i = 0; i < list.length; i++){
+    if (list[i].id === id){
+      var rec = list[i];
+      state.answers = rec.answers.slice();
+      state.report = computeReport(state.answers);
+      state.name = rec.name || '';
+      state.reportTs = rec.ts;
+      state.fromHistory = true;
+      state.finished = true;
+      state.idx = 0;
+      location.hash = '#report';
+      return;
+    }
+  }
+}
+
+/* ---- 报告 ---- */
+function renderReport(){
+  var rep = state.report;
+  if (!rep){ location.hash = '#home'; return; }
+
+  var letters = rep.code.split('');
+  var codeHtml = letters.map(function(l){
+    return '<span class="code-letter" style="background:' + TYPES[l].color + '">' + l + '</span>';
+  }).join('');
+  document.getElementById('repCode').innerHTML = codeHtml;
+
+  /* 姓名问候（只在报告出现一次） */
+  var greet = document.getElementById('repGreet');
+  if (state.name){
+    greet.innerHTML = '';
+    var nameSpan = document.createElement('span');
+    nameSpan.className = 'name';
+    nameSpan.textContent = state.name;
+    greet.appendChild(nameSpan);
+    greet.appendChild(document.createTextNode('，你的霍兰德代码是：'));
+    greet.style.display = 'block';
+  } else {
+    greet.style.display = 'none';
+  }
+
+  document.getElementById('repPhrase').textContent =
+    '以' + TYPES[rep.primary].name + '为主，' + TYPES[rep.secondary].name + '与' + TYPES[rep.tertiary].name + '为辅的「' +
+    TYPES[rep.primary].anchor + '」型兴趣结构。';
+  var ts = state.reportTs || Date.now();
+  var done = new Date(ts);
+  document.getElementById('repMeta').textContent = '完成时间：' +
+    done.getFullYear() + '-' + (done.getMonth() + 1) + '-' + done.getDate();
+  document.getElementById('repBack').style.display = state.fromHistory ? 'inline-flex' : 'none';
+
+  /* 得分列表（全部六型） */
+  var list = '';
+  rep.rankedAll.forEach(function(r){
+    list += '<div class="score-row">' +
+      '<span class="score-dot" style="background:' + TYPES[r.type].color + '"></span>' +
+      '<span class="score-name">' + TYPES[r.type].name + '<small> ' + r.type + '</small></span>' +
+      '<span class="score-bar-track"><span class="score-bar-fill" style="width:' + r.pct + '%;background:' + TYPES[r.type].color + '"></span></span>' +
+      '<span class="score-val">' + r.score + '/10 <small>' + r.pct + '%</small></span>' +
+      '</div>';
+  });
+  document.getElementById('scoreList').innerHTML = list;
+
+  /* 主导类型解读（前三） */
+  var detail = '';
+  rep.top.forEach(function(r, i){
+    var t = TYPES[r.type];
+    detail += '<div class="type-block">' +
+      '<div class="t-letter" style="background:' + t.color + '">' + r.type + '</div>' +
+      '<div class="t-body">' +
+        '<div class="t-head"><span class="t-name">' + t.name + '</span><span class="t-rank">第 ' + (i + 1) + ' 位 · ' + r.score + '/10</span><span class="t-en">' + t.en + '</span></div>' +
+        '<div class="t-key"><b>' + t.keyword + '</b></div>' +
+        '<div class="t-desc">' + t.desc + '</div>' +
+      '</div></div>';
+  });
+  document.getElementById('typeDetail').innerHTML = detail;
+
+  /* 组合解读 */
+  document.getElementById('comboPara').innerHTML = comboText(rep).split('\n').map(function(p){ return '<p>' + p + '</p>'; }).join('');
+  document.getElementById('hexSmall').innerHTML = hexSVG(280, rep.code.split(''));
+
+  /* 职业推荐 */
+  var plan = careerPlan(rep);
+  var planHtml = '';
+  plan.forEach(function(g){
+    planHtml += '<div class="career-group">' +
+      '<div class="cg-title"><span class="pill" style="background:' + g.color + '">' + g.key + '</span>' + g.label + '</div>' +
+      '<div class="cg-tags">' + g.careers.map(function(c){
+        return '<button type="button" class="cg-tag career-tag" data-t="' + g.type + '" data-n="' + encodeURIComponent(c) + '">' + c + '</button>';
+      }).join('') + '</div>' +
+      '</div>';
+  });
+  document.getElementById('careerPlan').innerHTML = planHtml;
+
+  /* 专业与行动建议 */
+  var advice = '';
+  var adv = [
+    { t: '首选专业方向', text: '主导类型 <b>' + TYPES[rep.primary].name + '(' + rep.primary + ')</b> 对应的专业方向：' + TYPES[rep.primary].majors + '。' },
+    { t: '行动建议', text: TYPES[rep.primary].tip },
+    { t: '拓展建议', text: '结合 ' + TYPES[rep.secondary].name + '(' + rep.secondary + ')与' + TYPES[rep.tertiary].name + '(' + rep.tertiary + ')：' + TYPES[rep.secondary].tip + '；' + TYPES[rep.tertiary].tip }
+  ];
+  advice = adv.map(function(a, i){
+    return '<div class="advice-item"><span class="a-num">' + (i + 1) + '</span><span class="a-text">' + a.text + '</span></div>';
+  }).join('');
+  document.getElementById('adviceBox').innerHTML = advice;
+
+  drawRadar();
+}
+
+/* 雷达图 */
+function drawRadar(){
+  var rep = state.report;
+  if (!rep) return;
+  var canvas = document.getElementById('radarCanvas');
+  var W = canvas.clientWidth, H = canvas.clientHeight;
+  var dpr = window.devicePixelRatio || 1;
+  canvas.width = W * dpr;
+  canvas.height = H * dpr;
+  var ctx = canvas.getContext('2d');
+  ctx.scale(dpr, dpr);
+  ctx.clearRect(0, 0, W, H);
+
+  var cx = W / 2, cy = H / 2;
+  var R = Math.min(W, H) / 2 - 34;
+  var pts = hexPoints(cx, cy, R);
+
+  /* 网格：三圈 + 轴线 */
+  ctx.lineWidth = 1;
+  for (var ring = 1; ring <= 3; ring++){
+    var rr = R * ring / 3;
+    var p = hexPoints(cx, cy, rr);
+    ctx.beginPath();
+    p.forEach(function(pt, i){
+      i === 0 ? ctx.moveTo(pt[0], pt[1]) : ctx.lineTo(pt[0], pt[1]);
+    });
+    ctx.closePath();
+    ctx.strokeStyle = ring === 3 ? '#D7DEE8' : '#E8EDF4';
+    ctx.stroke();
+  }
+  ctx.beginPath();
+  for (var a = 0; a < 6; a++){
+    ctx.moveTo(cx, cy);
+    ctx.lineTo(pts[a][0], pts[a][1]);
+  }
+  ctx.strokeStyle = '#E8EDF4';
+  ctx.stroke();
+
+  /* 数据多边形 */
+  ctx.beginPath();
+  for (var b = 0; b < 6; b++){
+    var t = TYPE_ORDER[b];
+    var x = cx + (pts[b][0] - cx) * (rep.scores[t] / MAX_SCORE);
+    var y = cy + (pts[b][1] - cy) * (rep.scores[t] / MAX_SCORE);
+    b === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+  }
+  ctx.closePath();
+  ctx.fillStyle = 'rgba(37,99,235,0.16)';
+  ctx.fill();
+  ctx.strokeStyle = '#2563EB';
+  ctx.lineWidth = 2;
+  ctx.stroke();
+
+  /* 顶点与分数 */
+  for (var c = 0; c < 6; c++){
+    var tc = TYPE_ORDER[c];
+    var px = cx + (pts[c][0] - cx) * (rep.scores[tc] / MAX_SCORE);
+    var py = cy + (pts[c][1] - cy) * (rep.scores[tc] / MAX_SCORE);
+    ctx.beginPath();
+    ctx.arc(px, py, 4, 0, Math.PI * 2);
+    ctx.fillStyle = TYPES[tc].color;
+    ctx.fill();
+    ctx.strokeStyle = '#fff';
+    ctx.lineWidth = 1.6;
+    ctx.stroke();
+    ctx.font = '600 11px sans-serif';
+    ctx.fillStyle = '#6B7280';
+    ctx.textAlign = 'center';
+    ctx.fillText(rep.scores[tc] + '', px, py - 9);
+  }
+
+  /* 轴标签 */
+  for (var d = 0; d < 6; d++){
+    var td = TYPE_ORDER[d];
+    var ang = -Math.PI / 2 + d * Math.PI / 3;
+    var lx = cx + (R + 20) * Math.cos(ang);
+    var ly = cy + (R + 20) * Math.sin(ang);
+    ctx.font = '700 12.5px sans-serif';
+    ctx.fillStyle = TYPES[td].color;
+    ctx.textAlign = Math.abs(Math.cos(ang)) < 0.3 ? 'center' : (Math.cos(ang) > 0 ? 'left' : 'right');
+    var ty = ly + 4;
+    ctx.fillText(TYPES[td].name, lx, ty);
+    ctx.font = '500 10.5px sans-serif';
+    ctx.fillStyle = '#9CA3AF';
+    ctx.fillText(td + ' · ' + Math.round(rep.scores[td] / MAX_SCORE * 100) + '%', lx, ty + 14);
+  }
+}
+
+/* ---- 路由 ---- */
+var ROUTES = { home: 'home', quiz: 'quiz', report: 'report', career: 'career', history: 'history' };
+
+function currentRoute(){
+  var h = (location.hash || '').replace('#', '');
+  if (h.indexOf('career') === 0) return 'career';
+  return ROUTES[h] || 'home';
+}
+
+function parseCareerHash(){
+  var h = (location.hash || '').replace('#', '');
+  var parts = h.split('?');
+  if (parts[0] !== 'career') return null;
+  var params = {};
+  if (parts[1]){
+    parts[1].split('&').forEach(function(kv){
+      var p = kv.split('=');
+      params[decodeURIComponent(p[0])] = decodeURIComponent(p[1] || '');
+    });
+  }
+  return params;
+}
+
+function renderCareer(){
+  var params = parseCareerHash();
+  if (!params || !params.t || !params.n || !CAREERS_DETAIL[params.t]){
+    document.getElementById('cTitle').textContent = '未找到该职业介绍';
+    return;
+  }
+  var list = CAREERS_DETAIL[params.t];
+  var job = null;
+  for (var i = 0; i < list.length; i++){
+    if (list[i].name === params.n){ job = list[i]; break; }
+  }
+  if (!job){ document.getElementById('cTitle').textContent = '未找到该职业介绍'; return; }
+  var t = TYPES[params.t];
+  var typeEl = document.getElementById('cType');
+  typeEl.textContent = t.name + '（' + params.t + '）';
+  typeEl.style.background = t.color;
+  document.getElementById('cTitle').textContent = job.name;
+  document.getElementById('cSub').textContent = '所属类型：' + t.name + ' · ' + t.keyword;
+  document.getElementById('cWork').innerHTML = job.work.map(function(w){ return '<li>' + w + '</li>'; }).join('');
+  document.getElementById('cSkills').innerHTML = job.skills.map(function(s){ return '<span class="cg-tag">' + s + '</span>'; }).join('');
+  document.getElementById('cTraits').innerHTML = job.traits.map(function(w){ return '<li>' + w + '</li>'; }).join('');
+  document.getElementById('cSubjects').innerHTML = job.subjects.map(function(s){ return '<span class="subj-tag">' + s + '</span>'; }).join('');
+  document.getElementById('cMajors').innerHTML = job.majors.map(function(m){ return '<span class="cg-tag">' + m + '</span>'; }).join('');
+}
+
+function renderView(){
+  var route = currentRoute();
+  var views = document.querySelectorAll('.view');
+  for (var i = 0; i < views.length; i++){
+    views[i].classList.toggle('active', views[i].getAttribute('data-route') === route);
+  }
+  if (route === 'home') renderHome();
+  if (route === 'quiz') renderQuiz();
+  if (route === 'report') renderReport();
+  if (route === 'career') renderCareer();
+  if (route === 'history') renderHistory();
+  document.getElementById('gearBtn').style.display = (route === 'quiz') ? 'none' : 'flex';
+}
+
+window.addEventListener('hashchange', renderView);
+window.addEventListener('resize', function(){
+  if (currentRoute() === 'report' && state.report) drawRadar();
+});
+
+/* ---- 事件绑定 ---- */
+document.getElementById('startBtn').addEventListener('click', function(){
+  var nameEl = document.getElementById('nameInput');
+  var nm = nameEl.value.trim();
+  if (!nm){
+    nameEl.classList.add('error');
+    document.getElementById('nameError').style.display = 'block';
+    nameEl.focus();
+    return;
+  }
+  state.answers = new Array(QUESTIONS.length).fill(null);
+  state.idx = 0;
+  state.finished = false;
+  state.report = null;
+  state.name = nm;
+  state.reportTs = 0;
+  state.fromHistory = false;
+  location.hash = '#quiz';
+});
+
+document.getElementById('nameInput').addEventListener('input', function(){
+  this.classList.remove('error');
+  document.getElementById('nameError').style.display = 'none';
+});
+
+document.getElementById('btnLike').addEventListener('click', function(){ answer(2); });
+document.getElementById('btnSome').addEventListener('click', function(){ answer(1); });
+document.getElementById('btnDislike').addEventListener('click', function(){ answer(0); });
+
+document.getElementById('btnBack').addEventListener('click', function(){
+  if (state.idx > 0){ state.idx--; renderQuiz(); }
+});
+
+document.getElementById('quizExit').addEventListener('click', function(){
+  if (window.confirm('退出后本次作答将清空，确定退出吗？')){
+    state.name = '';
+    var nEl = document.getElementById('nameInput');
+    nEl.value = '';
+    nEl.classList.remove('error');
+    document.getElementById('nameError').style.display = 'none';
+    location.hash = '#home';
+  }
+});
+
+document.getElementById('btnRetry').addEventListener('click', function(){
+  state.answers = new Array(QUESTIONS.length).fill(null);
+  state.idx = 0;
+  state.finished = false;
+  state.report = null;
+  state.name = '';
+  state.reportTs = 0;
+  state.fromHistory = false;
+  var nEl = document.getElementById('nameInput');
+  nEl.value = '';
+  nEl.classList.remove('error');
+  document.getElementById('nameError').style.display = 'none';
+  location.hash = '#home';
+});
+
+document.getElementById('btnPrint').addEventListener('click', function(){
+  window.print();
+});
+
+/* 职业标签点击 → 职业详情 */
+document.getElementById('careerPlan').addEventListener('click', function(ev){
+  var tag = ev.target && ev.target.closest ? ev.target.closest('.career-tag') : null;
+  if (tag){
+    location.hash = '#career?t=' + tag.getAttribute('data-t') + '&n=' + tag.getAttribute('data-n');
+  }
+});
+
+document.getElementById('careerBack').addEventListener('click', function(){
+  location.hash = state.report ? '#report' : '#home';
+});
+
+/* 历史记录入口与返回 */
+document.getElementById('gearBtn').addEventListener('click', function(){
+  location.hash = '#history';
+});
+document.getElementById('histBack').addEventListener('click', function(){
+  location.hash = '#home';
+});
+document.getElementById('repBack').addEventListener('click', function(){
+  location.hash = '#history';
+});
+
+/* 首次进入 */
+renderView();
+</script>
+</body>
+</html>
